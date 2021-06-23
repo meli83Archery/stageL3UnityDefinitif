@@ -9,28 +9,27 @@ public class Distance_entre_2Cellules : MonoBehaviour{
     
     void Update(){
         
-        Settings settings = GameObject.Find("Settings").GetComponent<Settings>();
+        Settings settings = GameObject.Find("Settings").GetComponent<Settings>(); //Retrieving the Settings script to use its methods 
         camera = settings.get_camera();
         
-        autreScriptSelect = GameObject.FindObjectOfType(typeof(SelectCellule)) as SelectCellule; //Permet de trouver le script qui se trouve sur le main camera
-        //SelectCellule selectcell = GameObject.Find("SelectCellule").GetComponent<SelectCellule>();
+        autreScriptSelect = GameObject.FindObjectOfType(typeof(SelectCellule)) as SelectCellule; //Allows you to find the SelectCellule script placed on an object
 
-        if(autreScriptSelect.Cellfav != null){ //si on a selectionne une cellule en favoris
-            Transform Cell1 = autreScriptSelect.Cellfav; //on recupere la variable Cellfav du script SelectCellule dans une varaible Cell1
+        if(autreScriptSelect.Cellfav != null){ //if we select a favorite cell
+            Transform Cell1 = autreScriptSelect.Cellfav; //We get the Cellfav variable from the SelectCell script in a Cell1 variable
         
-            if (Input.GetMouseButtonDown(1)){ // si on fait clic droit de la souris
+            if (Input.GetMouseButtonDown(1)){ //if right button pressed of the mouse
                 RaycastHit hit;
                 Ray ray = camera.ScreenPointToRay(Input.mousePosition);
                 
                 if (Physics.Raycast(ray, out hit)) {
-                    print("Les coordonnée de la première cellule" +Cell1.transform.position);
+                    print("The coordinates of the first cell" +Cell1.transform.position);
                     Transform Cell2 = hit.collider.transform;
-                    print("Les coordonnée de la deuxième cellule" +Cell2.transform.position);
-                    /*Affichage d'un trait
+                    print("The coordinates of the second cell" +Cell2.transform.position);
+                    /*
+                        Display of a line
                     */
                     float dist = distance2Cellules(Cell1,Cell2);
-                    print("Distance entre la première cellule "+Cell1.name+" et la deuxième cellule "+Cell2.name+" est : "+dist+" microm");
-                    
+                    print("Distance between the first cell "+Cell1.name+" and the second cell "+Cell2.name+" is : "+dist+" microm");
                 }
             }
         }
@@ -40,11 +39,12 @@ public class Distance_entre_2Cellules : MonoBehaviour{
 
     }
 
-/*Specification : 
-    Entree : deux Cellule de type Transform, Cellule1 et Cellule2
-    Sortie : un float distance qui est la distance entre les deux cellules en parametres
-    Cette fonction cree un vecteur position pour chacune des cellules et calcule la distance a partir
-    de ces deux vecteurs
+/*
+Specification : 
+    Entrance : Two Transform Cells type, Cellule1 et Cellule2
+    Exit : a float distance which is the distance between the two cells in settings
+    this function creates a 
+    Cette fonction cree a position vector for each cell and calculate the distance from of these two vectors
 */		
 public float distance2Cellules(Transform Cellule1,Transform Cellule2){
     Vector3 coordonnees1 = new Vector3(Cellule1.transform.position.x,Cellule1.transform.position.y,Cellule1.transform.position.z);
