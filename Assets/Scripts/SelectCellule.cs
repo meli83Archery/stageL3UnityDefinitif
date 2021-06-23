@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-using UnityEngine.UI;
+
 public class SelectCellule : MonoBehaviour {
     public Camera camera;
     public Transform Cellfav;
@@ -8,7 +8,7 @@ public class SelectCellule : MonoBehaviour {
     
 void Update(){
 
-        Settings settings = GameObject.Find("Settings").GetComponent<Settings>();
+        Settings settings = GameObject.Find("Settings").GetComponent<Settings>(); //Retrieving the Settings script to use its methods
         camera = settings.get_camera();
 
 
@@ -19,13 +19,11 @@ void Update(){
                 if (Physics.Raycast(ray, out hit)) {
                     
                     Cellfav = hit.collider.transform;
-                    //Surbrillance de l'objet
+                    //Highlight of the object Cellfav
 
-                    //Affichage de la description de la cellule
-                    print("Coucou on m'a cliqué dessus");
+                    //Display of the cell description
                     foreach (var kvp in Cellfav.GetComponent<Metadata>().cell_data)
                         Debug.Log(kvp.Key + " : " + kvp.Value);
-                    
                 }
             }
 }
