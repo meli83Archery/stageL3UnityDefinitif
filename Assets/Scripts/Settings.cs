@@ -85,7 +85,7 @@ public class Settings : MonoBehaviour
     }
 
 //SETTER
-public void set_color_parameter(int value){ //A changer en fonction du nombre de propriete present dans le csv
+public void set_color_parameter(int value){
     color_parameter=value;
 }
 public void set_color_palette(int value){
@@ -97,6 +97,11 @@ public void set_color_mode_absolute(){
 public void set_color_mode_relative(){
     color_mode=1;
 }
+public int get_color_mode(){
+    return color_mode;
+}
+
+//GETTER
 public Camera get_camera(){
     if(ActivateVR == true){
         return VRCamera;
@@ -104,5 +109,11 @@ public Camera get_camera(){
     else{
         return Camera2D;
     }
+}
+public int get_color_parametre(){
+    return color_parameter;
+}
+public int get_color_palette(){
+    return color_palette;
 }
 }
