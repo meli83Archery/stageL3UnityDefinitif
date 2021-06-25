@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.UI;
+using System;
 
 public class ColorationSimulation : MonoBehaviour
 {
@@ -12,9 +13,7 @@ public class ColorationSimulation : MonoBehaviour
     public TMPro.TMP_Dropdown DD_Prop; //Dropdown TextMeshPro for properties
 
     public TMPro.TMP_Dropdown DD_Color; //Dropdown TextMeshPro for the color pallette
-    public int numberOfGradient;
     public List<string> gradientName;
-    public List<Gradient> grad;
 
 
     /*
@@ -63,50 +62,19 @@ public class ColorationSimulation : MonoBehaviour
 
     /*
     Specification:
-        Entrance : Two double min et max, a string valeur and a gradient grad
-        This function must color the cell according to its string valeur and for that it will use a function
-        interpolation by taking the double min and max as the minimum and maximum value.
+        Entrance : Two double min et max, a string valeur and a list of hex values for colors
+        Exit : return a hex value  for the coloration
+        This function must give a color according to its string valeur ,the list for the gradient that we choose and 
+        for that it will use a function interpolation by taking the double min and max as the minimum and maximum value.
     */
-    /*public void ColorationCellule(double min, double max, string valeur,Gradient grad){
-        
-
-    }*/
-
-    /*
-        Specification :
-            Entrance : An int TailleListGrad
-            Exit : two list, a list of string for the name for the gradient and a list of gradient for the coloring
-            This function allows to generate a certain number of gradients, this number is defined by the int TailleListGrad
-    */
-    public (List<string>,List<Gradient>) generateGradient(int TailleListGrad){
-        List<Gradient> listGrad = new List<Gradient>();
-        List<string> listNameGrad = new List<string>();
-        for(int i = 0; i < TailleListGrad; i++){
-            Gradient gradient = new Gradient();
-
-            // Populate the color keys at the relative time 0 and 1 (0 and 100%)
-            GradientColorKey[] colorKey = new GradientColorKey[2];
-            colorKey[0].color = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
-            colorKey[0].time = 0f;
-            colorKey[1].color = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
-            colorKey[1].time = 1.0f;
-
-            // Populate the alpha  keys at relative time 0 and 1  (0 and 100%)
-            GradientAlphaKey[] alphaKey = new GradientAlphaKey[2];
-            alphaKey[0].alpha = 1.0f;
-            alphaKey[0].time = 0.0f;
-            alphaKey[1].alpha = 0.0f;
-            alphaKey[1].time = 1.0f;
-
-            gradient.SetKeys(colorKey, alphaKey);
-            listGrad.Add(gradient);
-            listNameGrad.Add("Gradient " + i);
-        }
-        
-
-        return (listNameGrad,listGrad);
-
+    public byte ColorationCellule(double min, double max, string valeur,List<byte> ColorList){
+        double valeurInDouble = double.Parse(valeur, System.Globalization.CultureInfo.InvariantCulture);
+        double percentBetMinMax = (max - valeurInDouble)/(max - min);
+        double percentOfList = ColorList.Count * percentBetMinMax;
+        int index = (int)Math.Ceiling(percentOfList);
+        return ColorList[index];
     }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -122,7 +90,9 @@ public class ColorationSimulation : MonoBehaviour
         DD_Prop.AddOptions(item);
 
         //Initializing the drop down of color palette
-        (gradientName,grad) = generateGradient(numberOfGradient);
+        gradientName.Add("Viridis");
+        gradientName.Add("Magma");
+        gradientName.Add("Plasma");
         DD_Color.AddOptions(gradientName);
 
     }
@@ -149,7 +119,7 @@ public class ColorationSimulation : MonoBehaviour
             double[] MinMaxR = MinMaxRelatif(keys[color_para]);
             double Min = MinMaxR[0];
             double Max = MinMaxR[1];
-            print("Min = "+Min + " Max ="+ Max+" de "+keys[color_para]);
+            print("Min = "+Min + " Max ="+ Max+" de "+keys[color_para]); //display of min and max for checking if the function MinMaxRelatif works
         }
         /*
         Here creation of a loop using the function ColorationCell and Min, Max
